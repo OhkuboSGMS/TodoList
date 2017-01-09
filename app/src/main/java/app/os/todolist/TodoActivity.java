@@ -3,6 +3,7 @@ package app.os.todolist;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -10,24 +11,35 @@ import android.view.MenuItem;
 import android.view.View;
 
 public class TodoActivity extends AppCompatActivity {
+    String title = "Task:";
+    TodoEditFragment mTodoEditFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
+        mTodoEditFragment = new TodoEditFragment();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
-        final TodoAdapter adapter =((TodoActivityFragment) getSupportFragmentManager()
+        final TodoAdapter adapter = ((TodoActivityFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.todoListFragment)).getAdapter();
+        mTodoEditFragment.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         //新たなTodoを追加
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter.add(new TodoData());
+//                TodoData todoData =new TodoData(title + adapter.getCount());
+//                adapter.add(todoData);
+//                mTodoEditFragment.setTodoData(todoData);
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainer, mTodoEditFragment);
+                transaction.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out);
+                transaction.addToBackStack(null);
+                transaction.commit();
                 Snackbar.make(view, R.string.addTodo, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
