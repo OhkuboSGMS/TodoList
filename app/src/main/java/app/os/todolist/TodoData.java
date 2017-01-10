@@ -1,6 +1,6 @@
 package app.os.todolist;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Created by ookubo on 2017/01/09.
@@ -8,18 +8,20 @@ import java.util.Date;
 public class TodoData {
     String title="Title";
     String message="Message";
-    Date date;
+    Calendar calendar;
 
     public TodoData() {
+        this.calendar =Calendar.getInstance();
     }
     public TodoData(String title){
         this.title =title;
+        this.calendar =Calendar.getInstance();
     }
 
-    public TodoData(String title, String message, Date date) {
+    public TodoData(String title, String message, Calendar calendar) {
         this.title = title;
         this.message = message;
-        this.date = date;
+        this.calendar = calendar;
     }
 
     public String getTitle() {
@@ -38,11 +40,15 @@ public class TodoData {
         this.message = message;
     }
 
-    public Date getDate() {
-        return date;
+    public void setDate(int year,int month,int dayOfMonth){
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH,month);
+        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+    }
+    public void setTime(int hour,int minute){
+        calendar.set(Calendar.HOUR,hour);
+        calendar.set(Calendar.MINUTE,minute);
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+
 }

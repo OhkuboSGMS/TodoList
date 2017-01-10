@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="app.os.todolist.TodoActivity">
+    tools:context="app.os.todolist.TodoActivity"
+    android:id="@+id/coordinator">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,21 +22,19 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
     </android.support.design.widget.AppBarLayout>
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
-    <include layout="@layout/content_todo"
-             android:id="@+id/fragmentContainer"/>
-</LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/frame">
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_menu_edit"/>
+    </FrameLayout>
+    <!--<include layout="@layout/content_todo"-->
+        <!--/>-->
+
+    <!--<Recycler />-->
+
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.io.Serializable;
+
 /**
  * Created by ookubo on 2017/01/09.
  */
-public class TodoAdapter extends ArrayAdapter<TodoData> {
+public class TodoAdapter extends ArrayAdapter<TodoData> implements Serializable {
     LayoutInflater inflater;
     public TodoAdapter(Context context, int resource) {
         super(context, resource);

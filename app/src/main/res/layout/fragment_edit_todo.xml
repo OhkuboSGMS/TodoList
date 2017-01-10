@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-    >
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="app.os.todolist.TodoEditFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,8 +30,11 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/titile_editText"
-                android:layout_gravity="center_horizontal"/>
+                android:id="@+id/title_editText"
+                android:layout_gravity="center_horizontal"
+                android:clickable="false"
+                android:focusableInTouchMode="true"
+                android:imeOptions="actionNext"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -51,12 +57,27 @@
                 android:text="@string/edit_todo_DataTime"
                 android:id="@+id/date_text"/>
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/date_editText"
-                android:inputType="datetime"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:id="@+id/date_fragment"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/abc_btn_colored_material"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time"
+                    android:id="@+id/time_fragment"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/abc_btn_colored_material"/>
+            </LinearLayout>
 
             <Button
                 android:layout_width="wrap_content"
@@ -66,4 +87,4 @@
                 android:layout_gravity="center"/>
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
