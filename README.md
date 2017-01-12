@@ -1,2 +1,3 @@
 # TodoList
 Android でTodoListアプリケーション
+Fragmentやマテリアルデザインを使用しできるだけモダンなアンドロイドで開発します
