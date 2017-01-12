@@ -10,4 +10,7 @@
     <string name="edit_todo_message">Message</string>
     <string name="edit_todo_DataTime">Date/Time</string>
     <string name="edit_todo_done_Button">Done</string>
+
+    <string name="edit_todo_default_title">Title</string>
+    <string name="edit_todo_default_message">Message</string>
 </resources>

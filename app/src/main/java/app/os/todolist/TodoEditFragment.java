@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  * Created by ookubo on 2017/01/09.
@@ -47,37 +47,40 @@ public class TodoEditFragment extends Fragment implements Serializable {
         return rootView;
     }
 
+    /**
+     * OnCreateViewではEditTextを変更することができなかった
+     */
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onResume() {
+        super.onResume();
         final TodoData changeData;
+        this.clear(resetData);
+        //既存のデータからの開き
         if(resetData!=null){
             changeData =resetData;
-        }else {
+        }
+        //新規作成
+        else {
             changeData = new TodoData();
         }
-
+        //編集を終了してリスト画面に戻る
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: "+adapter.getCount());
-                        if(titleEditText.getText()!=null){
-                            changeData.setTitle(titleEditText.getText().toString());
-                        }
-                        changeData.setMessage(messageEditText.getText().toString());
-                        //既存のアイテムを編集した場合
-                        if (resetData != null) {
-                            resetData.setTitle("Task");
-                        }
-                        //新しくアイテムを作成した場合
-                        else {
-                            adapter.add(changeData);
-                        }
-                Activity activity =getActivity();
-                if(activity instanceof OnCommunicateFragments){
-                    Log.d(TAG, "onClick: update");
-                    ((OnCommunicateFragments) activity).onUpdateAdapter(adapter,TAG);
+                //既存のアイテムを編集した場合
+                if (resetData != null) {
+                    update(resetData);
                 }
+                //新しくアイテムを作成した場合
+                else {
+                    update(changeData);
+                    adapter.add(changeData);
+                }
+                Activity activity =getActivity();
+                if(activity instanceof OnCommunicateFragments){;
+                    ((OnCommunicateFragments) activity).onUpdateAdapter(adapter,TAG,null);
+                }
+                //リスト画面に戻る
                 getFragmentManager().popBackStack();
             }
         });
@@ -95,7 +98,7 @@ public class TodoEditFragment extends Fragment implements Serializable {
                 fragment.show(getFragmentManager(),null);
             }
         });
-        
+
         timeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,6 +114,43 @@ public class TodoEditFragment extends Fragment implements Serializable {
             }
         });
 
+    }
+
+    /**
+     * 編集画面のViewをきれいにする
+     * *Warning* Viewが生成された後に呼び出すこと
+     */
+    public void clear(TodoData data){
+        //新規タスクの場合はデフォルトの値に
+        if(data==null){
+            TodoData tmp =new TodoData(getString(R.string.edit_todo_default_title),
+                                        getString(R.string.edit_todo_default_message),
+                                        Calendar.getInstance());
+            updateView(tmp);
+        }
+        //既存のタスクの編集の場合はその値に
+        else{
+           updateView(data);
+        }
+    }
+
+    /**
+     *　Viewを更新する
+     * @param data
+     */
+    private void updateView(TodoData data){
+        titleEditText.setText(data.getTitle());
+        messageEditText.setText(data.getMessage());
+        dateEditText.setText(data.getDisplayDate());
+        timeEditText.setText(data.getDisplayTime());
+    }
+
+    /**
+     * Date,TimeはFragmentなので更新したときにデータが更新される
+     */
+    private void update(TodoData data){
+        data.setTitle(titleEditText.getText().toString());
+        data.setMessage(messageEditText.getText().toString());
     }
 
     public void setResetData(TodoData resetData) {

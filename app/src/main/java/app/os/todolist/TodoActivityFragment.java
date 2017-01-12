@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.io.Serializable;
@@ -20,8 +21,9 @@ import java.io.Serializable;
  * Fragmentを起動　->todoリストを読み込む
  * 終了:todoリストを保存
  */
-public class TodoActivityFragment extends Fragment implements Serializable{
+public class TodoActivityFragment extends Fragment implements Serializable ,AdapterView.OnItemClickListener{
     public static final String TAG ="TodoActivityFragment";
+    private Fragment transFragment;
     private ListView mTodoListView;
     private FloatingActionButton fab;
     private TodoAdapter adapter;
@@ -46,6 +48,15 @@ public class TodoActivityFragment extends Fragment implements Serializable{
         mTodoListView =(ListView)rootView.findViewById(R.id.todoListView);
         mTodoListView.setAdapter(adapter);
         fab = (FloatingActionButton)rootView.findViewById(R.id.fab);
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //既存のリストアイテムを選択したときに
+        mTodoListView.setOnItemClickListener(this);
         //新たなTodoを追加
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,10 +65,9 @@ public class TodoActivityFragment extends Fragment implements Serializable{
                 Activity activity =getActivity();
                 if(activity instanceof OnCommunicateFragments){
                     Log.d(TAG, "onClick: update");
-                    ((OnCommunicateFragments) activity).onUpdateAdapter(adapter,TAG);
+                    ((OnCommunicateFragments) activity).onUpdateAdapter(adapter,TAG,null);
                 }
-                Fragment transFragment =(Fragment)getArguments().getSerializable(TRANSITION_FRAGMENT_KEY);
-                Log.d(TAG, "onClick: ItemCount:"+adapter.getCount());
+//                Log.d(TAG, "onClick: ItemCount:"+adapter.getCount());
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
@@ -68,13 +78,6 @@ public class TodoActivityFragment extends Fragment implements Serializable{
                         .setAction("Action", null).show();
             }
         });
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override
@@ -89,16 +92,41 @@ public class TodoActivityFragment extends Fragment implements Serializable{
         Log.d(TAG, "onPause: ");
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Log.d(TAG, "onItemClick: index"+i);
+        TodoData clickedData =adapter.getItem(i);
+
+        //既存のアイテムを編集
+        Activity activity =getActivity();
+        if(activity instanceof OnCommunicateFragments){
+            ((OnCommunicateFragments) activity).onUpdateAdapter(adapter,TAG,clickedData);
+        }
+//        Log.d(TAG, "onClick: ItemCount:"+adapter.getCount());
+        getFragmentManager().beginTransaction().
+                setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).
+                replace(R.id.frame, transFragment).
+                addToBackStack(null).
+                commit();
+
+
+
+    }
+
     public TodoAdapter getAdapter() {
         return adapter;
     }
 
     public void setAdapter(TodoAdapter adapter) {
         this.adapter = adapter;
-        Log.d(TAG, "setAdapter:"+adapter.getCount());
+//        Log.d(TAG, "setAdapter:"+adapter.getCount());
         if(mTodoListView!=null){
             mTodoListView.setAdapter(adapter);
         }
-        Log.d(TAG, "setAdapter:"+adapter.getCount());
+//        Log.d(TAG, "setAdapter:"+adapter.getCount());
+    }
+
+    public void setTransFragment(Fragment transFragment) {
+        this.transFragment = transFragment;
     }
 }
