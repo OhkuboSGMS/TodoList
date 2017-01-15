@@ -10,9 +10,10 @@ import java.util.Calendar;
 
 /**
  * Created by ookubo on 2017/01/10.
+ * 日付(YYYY/MM/DD)を表示して入力するダイアログのフラグメント
  */
 public class DatePickerDialogFragment extends DialogFragment {
-    public static final String LISTER_KEY ="DateKey";
+    public static final String LISTER_KEY = "DateKey";
     DatePickerDialog.OnDateSetListener listener;
 
     public DatePickerDialogFragment() {
@@ -22,12 +23,12 @@ public class DatePickerDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Calendar calendar =Calendar.getInstance();
-        int year =calendar.get(Calendar.YEAR);
-        int month =calendar.get(Calendar.MONTH);
-        int day =calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog datePickerDialog =new DatePickerDialog(getActivity(),listener,
-                year,month,day);
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), listener,
+                year, month, day);
         return datePickerDialog;
     }
 

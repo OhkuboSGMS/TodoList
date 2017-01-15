@@ -20,15 +20,16 @@ import java.io.Serializable;
 /**
  * Fragmentを起動　->todoリストを読み込む
  * 終了:todoリストを保存
+ * todoリストを表示するFragment
  */
-public class TodoActivityFragment extends Fragment implements Serializable ,AdapterView.OnItemClickListener{
-    public static final String TAG ="TodoActivityFragment";
+public class TodoActivityFragment extends Fragment implements Serializable, AdapterView.OnItemClickListener {
+    public static final String TAG = "TodoActivityFragment";
+    public static final String TRANSITION_FRAGMENT_KEY = "008";
+    public static final String ADAPER_KEY = "ARRAY_ADAPTER";
     private Fragment transFragment;
     private ListView mTodoListView;
     private FloatingActionButton fab;
     private TodoAdapter adapter;
-    public static final String TRANSITION_FRAGMENT_KEY ="008";
-    public static final String ADAPER_KEY ="ARRAY_ADAPTER";
 
     public TodoActivityFragment() {
     }
@@ -36,7 +37,7 @@ public class TodoActivityFragment extends Fragment implements Serializable ,Adap
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        adapter =new TodoAdapter(getContext(),R.layout.item_todo);
+        adapter = new TodoAdapter(getContext(), R.layout.item_todo);
 
     }
 
@@ -44,10 +45,10 @@ public class TodoActivityFragment extends Fragment implements Serializable ,Adap
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: OncreateView");
-        View rootView = inflater.inflate(R.layout.fragment_todo, container,false);
-        mTodoListView =(ListView)rootView.findViewById(R.id.todoListView);
+        View rootView = inflater.inflate(R.layout.fragment_todo, container, false);
+        mTodoListView = (ListView) rootView.findViewById(R.id.todoListView);
         mTodoListView.setAdapter(adapter);
-        fab = (FloatingActionButton)rootView.findViewById(R.id.fab);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
         return rootView;
     }
@@ -57,20 +58,18 @@ public class TodoActivityFragment extends Fragment implements Serializable ,Adap
         super.onViewCreated(view, savedInstanceState);
         //既存のリストアイテムを選択したときに
         mTodoListView.setOnItemClickListener(this);
-        //新たなTodoを追加
+        //新たなTodoを追加するボタン
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Activity activity =getActivity();
-                if(activity instanceof OnCommunicateFragments){
+                Activity activity = getActivity();
+                if (activity instanceof OnCommunicateFragments) {
                     Log.d(TAG, "onClick: update");
-                    ((OnCommunicateFragments) activity).onUpdateAdapter(adapter,TAG,null);
+                    ((OnCommunicateFragments) activity).onUpdateAdapter(adapter, TAG, null);
                 }
 //                Log.d(TAG, "onClick: ItemCount:"+adapter.getCount());
-
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+                transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 transaction.replace(R.id.frame, transFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -94,21 +93,20 @@ public class TodoActivityFragment extends Fragment implements Serializable ,Adap
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Log.d(TAG, "onItemClick: index"+i);
-        TodoData clickedData =adapter.getItem(i);
+        Log.d(TAG, "onItemClick: index" + i);
+        TodoData clickedData = adapter.getItem(i);
 
         //既存のアイテムを編集
-        Activity activity =getActivity();
-        if(activity instanceof OnCommunicateFragments){
-            ((OnCommunicateFragments) activity).onUpdateAdapter(adapter,TAG,clickedData);
+        Activity activity = getActivity();
+        if (activity instanceof OnCommunicateFragments) {
+            ((OnCommunicateFragments) activity).onUpdateAdapter(adapter, TAG, clickedData);
         }
 //        Log.d(TAG, "onClick: ItemCount:"+adapter.getCount());
         getFragmentManager().beginTransaction().
-                setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right).
+                setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right).
                 replace(R.id.frame, transFragment).
                 addToBackStack(null).
                 commit();
-
 
 
     }
@@ -120,7 +118,7 @@ public class TodoActivityFragment extends Fragment implements Serializable ,Adap
     public void setAdapter(TodoAdapter adapter) {
         this.adapter = adapter;
 //        Log.d(TAG, "setAdapter:"+adapter.getCount());
-        if(mTodoListView!=null){
+        if (mTodoListView != null) {
             mTodoListView.setAdapter(adapter);
         }
 //        Log.d(TAG, "setAdapter:"+adapter.getCount());

@@ -10,9 +10,10 @@ import java.util.Calendar;
 
 /**
  * Created by ookubo on 2017/01/10.
+ * 時間(HH:MM)を表示して入力するダイアログフラグメント
  */
 public class TimePickerDialogFragment extends DialogFragment {
-    public static final String LISTENER_KEY ="00ol";
+    public static final String LISTENER_KEY = "00ol";
     TimePickerDialog.OnTimeSetListener listener;
 
     public TimePickerDialogFragment() {
@@ -21,12 +22,12 @@ public class TimePickerDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Calendar calendar =Calendar.getInstance();
-        int hour =calendar.get(Calendar.HOUR_OF_DAY);
-        int minute =calendar.get(Calendar.MINUTE);
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog =new TimePickerDialog(getActivity(),listener,
-                hour,minute,true);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), listener,
+                hour, minute, true);
 
         return timePickerDialog;
     }

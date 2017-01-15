@@ -20,10 +20,11 @@ import java.util.Calendar;
 
 /**
  * Created by ookubo on 2017/01/09.
+ * リストのアイテムを編集&確認するFragment
  */
 public class TodoEditFragment extends Fragment implements Serializable {
-    public static final String TAG ="TodoEditFragment";
-    public static final String TRANSITION_FRAGMENT_KEY ="009";
+    public static final String TAG = "TodoEditFragment";
+    public static final String TRANSITION_FRAGMENT_KEY = "009";
     Button editButton;
     TodoData resetData;
     TextView timeEditText;
@@ -31,6 +32,7 @@ public class TodoEditFragment extends Fragment implements Serializable {
     EditText titleEditText;
     EditText messageEditText;
     TodoAdapter adapter;
+
     public TodoEditFragment() {
     }
 
@@ -39,16 +41,17 @@ public class TodoEditFragment extends Fragment implements Serializable {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_todo, null);
         editButton = (Button) rootView.findViewById(R.id.done_button);
-        timeEditText =(TextView)rootView.findViewById(R.id.time_fragment);
-        dateEditText =(TextView)rootView.findViewById(R.id.date_fragment);
-        titleEditText =(EditText)rootView.findViewById(R.id.title_editText);
-        messageEditText =(EditText)rootView.findViewById(R.id.message_editText);
+        timeEditText = (TextView) rootView.findViewById(R.id.time_fragment);
+        dateEditText = (TextView) rootView.findViewById(R.id.date_fragment);
+        titleEditText = (EditText) rootView.findViewById(R.id.title_editText);
+        messageEditText = (EditText) rootView.findViewById(R.id.message_editText);
 
         return rootView;
     }
 
     /**
      * OnCreateViewではEditTextを変更することができなかった
+     * Viewの動作を設定する
      */
     @Override
     public void onResume() {
@@ -56,8 +59,8 @@ public class TodoEditFragment extends Fragment implements Serializable {
         final TodoData changeData;
         this.clear(resetData);
         //既存のデータからの開き
-        if(resetData!=null){
-            changeData =resetData;
+        if (resetData != null) {
+            changeData = resetData;
         }
         //新規作成
         else {
@@ -76,9 +79,10 @@ public class TodoEditFragment extends Fragment implements Serializable {
                     update(changeData);
                     adapter.add(changeData);
                 }
-                Activity activity =getActivity();
-                if(activity instanceof OnCommunicateFragments){;
-                    ((OnCommunicateFragments) activity).onUpdateAdapter(adapter,TAG,null);
+                Activity activity = getActivity();
+                if (activity instanceof OnCommunicateFragments) {
+                    ;
+                    ((OnCommunicateFragments) activity).onUpdateAdapter(adapter, TAG, null);
                 }
                 //リスト画面に戻る
                 getFragmentManager().popBackStack();
@@ -87,30 +91,30 @@ public class TodoEditFragment extends Fragment implements Serializable {
         dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialogFragment fragment =new DatePickerDialogFragment();
+                DatePickerDialogFragment fragment = new DatePickerDialogFragment();
                 fragment.setListener(new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        dateEditText.setText(i+"/"+i1+"/"+i2);
-                        changeData.setDate(i,i1,i2);
+                        dateEditText.setText(i + "/" + i1 + "/" + i2);
+                        changeData.setDate(i, i1, i2);
                     }
                 });
-                fragment.show(getFragmentManager(),null);
+                fragment.show(getFragmentManager(), null);
             }
         });
 
         timeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialogFragment fragment =new TimePickerDialogFragment();
+                TimePickerDialogFragment fragment = new TimePickerDialogFragment();
                 fragment.setListener(new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        timeEditText.setText(i+":"+i1);
-                        changeData.setTime(i,i1);
+                        timeEditText.setText(i + ":" + i1);
+                        changeData.setTime(i, i1);
                     }
                 });
-                fragment.show(getFragmentManager(),null);
+                fragment.show(getFragmentManager(), null);
             }
         });
 
@@ -120,25 +124,26 @@ public class TodoEditFragment extends Fragment implements Serializable {
      * 編集画面のViewをきれいにする
      * *Warning* Viewが生成された後に呼び出すこと
      */
-    public void clear(TodoData data){
+    public void clear(TodoData data) {
         //新規タスクの場合はデフォルトの値に
-        if(data==null){
-            TodoData tmp =new TodoData(getString(R.string.edit_todo_default_title),
-                                        getString(R.string.edit_todo_default_message),
-                                        Calendar.getInstance());
+        if (data == null) {
+            TodoData tmp = new TodoData(getString(R.string.edit_todo_default_title),
+                    getString(R.string.edit_todo_default_message),
+                    Calendar.getInstance());
             updateView(tmp);
         }
         //既存のタスクの編集の場合はその値に
-        else{
-           updateView(data);
+        else {
+            updateView(data);
         }
     }
 
     /**
-     *　Viewを更新する
+     * 　Viewを更新する
+     *
      * @param data
      */
-    private void updateView(TodoData data){
+    private void updateView(TodoData data) {
         titleEditText.setText(data.getTitle());
         messageEditText.setText(data.getMessage());
         dateEditText.setText(data.getDisplayDate());
@@ -147,8 +152,9 @@ public class TodoEditFragment extends Fragment implements Serializable {
 
     /**
      * Date,TimeはFragmentなので更新したときにデータが更新される
+     * エディターのデータを更新する
      */
-    private void update(TodoData data){
+    private void update(TodoData data) {
         data.setTitle(titleEditText.getText().toString());
         data.setMessage(messageEditText.getText().toString());
     }
